@@ -1,4 +1,4 @@
---// ⚡ CoiledTom Hub v3 | Minimal Futuristic Design
+--// ⚡ CoiledTom Hub v3.1 | Futuristic Scrollable Tabs
 --// 🌐 by CoiledTom
 
 local player = game.Players.LocalPlayer
@@ -45,7 +45,7 @@ Title.TextSize = 22
 Title.Position = UDim2.new(0, 20, 0, 10)
 Title.Size = UDim2.new(1, -40, 0, 30)
 
---// Botão de fechar (neon)
+--// Botão de fechar ✕
 local CloseButton = Instance.new("TextButton", MainFrame)
 CloseButton.Size = UDim2.new(0, 35, 0, 35)
 CloseButton.Position = UDim2.new(1, -45, 0, 10)
@@ -63,11 +63,17 @@ CloseButton.MouseButton1Click:Connect(function()
 	OpenButton.Visible = true
 end)
 
---// Tabs container
-local TabHolder = Instance.new("Frame", MainFrame)
+--// Tabs com rolagem horizontal
+local TabHolder = Instance.new("ScrollingFrame", MainFrame)
 TabHolder.Position = UDim2.new(0, 10, 0, 50)
-TabHolder.Size = UDim2.new(1, -20, 0, 35)
+TabHolder.Size = UDim2.new(1, -20, 0, 40)
 TabHolder.BackgroundTransparency = 1
+TabHolder.ScrollBarThickness = 6
+TabHolder.ScrollingDirection = Enum.ScrollingDirection.X
+TabHolder.CanvasSize = UDim2.new(0, 0, 0, 0)
+TabHolder.AutomaticCanvasSize = Enum.AutomaticSize.X
+TabHolder.ScrollBarImageColor3 = Color3.fromRGB(180, 100, 255)
+TabHolder.ScrollBarImageTransparency = 0.3
 
 local UIListLayoutTabs = Instance.new("UIListLayout", TabHolder)
 UIListLayoutTabs.FillDirection = Enum.FillDirection.Horizontal
@@ -76,11 +82,11 @@ UIListLayoutTabs.SortOrder = Enum.SortOrder.LayoutOrder
 
 --// Área de conteúdo
 local ContentFrame = Instance.new("Frame", MainFrame)
-ContentFrame.Position = UDim2.new(0, 10, 0, 95)
+ContentFrame.Position = UDim2.new(0, 10, 0, 100)
 ContentFrame.Size = UDim2.new(1, -20, 1, -115)
 ContentFrame.BackgroundTransparency = 1
 
---// Função para criar abas e botões
+--// Função de criação de abas e botões
 local ActiveTab = nil
 local function CreateTab(tabName, buttons)
 	local TabButton = Instance.new("TextButton", TabHolder)
@@ -114,7 +120,6 @@ local function CreateTab(tabName, buttons)
 		local BtnCorner = Instance.new("UICorner", Btn)
 		BtnCorner.CornerRadius = UDim.new(0, 8)
 
-		-- Efeito neon no hover
 		Btn.MouseEnter:Connect(function()
 			Btn.BackgroundColor3 = Color3.fromRGB(80, 0, 150)
 		end)
@@ -122,7 +127,6 @@ local function CreateTab(tabName, buttons)
 			Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 		end)
 
-		-- Executar script
 		Btn.MouseButton1Click:Connect(function()
 			loadstring(game:HttpGet(info.link))()
 		end)
@@ -137,16 +141,21 @@ local function CreateTab(tabName, buttons)
 	end)
 end
 
---// Criar abas e scripts
+--// Criação das abas e funções
 CreateTab("🌳 Grow a Garden", {
 	{name = "Speed Hub", link = "https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"},
 })
 
-CreateTab("🌆 99 Nights in the Forest", {
+CreateTab("🌆 99 Nights", {
 	{name = "H4x", link = "https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua"},
 })
 
--- Mostrar primeira aba automaticamente
+CreateTab("🧠 Steal a Brainrot", {
+	{name = "Chilli Hub", link = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
+	{name = "feDhe", link = "https://raw.githubusercontent.com/bananaGanteng/Legend/refs/heads/main/Steal%20a%20Brainrot"},
+})
+
+--// Aba inicial
 ContentFrame:FindFirstChildOfClass("Frame").Visible = true
 ActiveTab = ContentFrame:FindFirstChildOfClass("Frame")
 
@@ -156,7 +165,7 @@ OpenButton.MouseButton1Click:Connect(function()
 	OpenButton.Visible = false
 end)
 
--- Créditos
+--// Créditos
 local Credit = Instance.new("TextLabel", MainFrame)
 Credit.BackgroundTransparency = 1
 Credit.Position = UDim2.new(0, 15, 1, -25)
