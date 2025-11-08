@@ -1,0 +1,168 @@
+--// ⚡ CoiledTom Hub v3 | Minimal Futuristic Design
+--// 🌐 by CoiledTom
+
+local player = game.Players.LocalPlayer
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "CoiledTomHub"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
+
+--// Botão flutuante 🚀
+local OpenButton = Instance.new("TextButton")
+OpenButton.Parent = ScreenGui
+OpenButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+OpenButton.Text = "🚀"
+OpenButton.TextColor3 = Color3.fromRGB(180, 100, 255)
+OpenButton.Font = Enum.Font.GothamBold
+OpenButton.TextSize = 24
+OpenButton.Size = UDim2.new(0, 50, 0, 50)
+OpenButton.Position = UDim2.new(1, -70, 0, 20)
+OpenButton.Draggable = true
+
+local OpenCorner = Instance.new("UICorner", OpenButton)
+OpenCorner.CornerRadius = UDim.new(1, 0)
+
+--// Janela principal
+local MainFrame = Instance.new("Frame")
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
+MainFrame.Size = UDim2.new(0, 350, 0, 280)
+MainFrame.Position = UDim2.new(0.5, -175, 0.5, -140)
+MainFrame.Visible = false
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+local CornerMain = Instance.new("UICorner", MainFrame)
+CornerMain.CornerRadius = UDim.new(0, 15)
+
+--// Título
+local Title = Instance.new("TextLabel", MainFrame)
+Title.BackgroundTransparency = 1
+Title.Text = "🚀 CoiledTom Hub"
+Title.TextColor3 = Color3.fromRGB(180, 100, 255)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 22
+Title.Position = UDim2.new(0, 20, 0, 10)
+Title.Size = UDim2.new(1, -40, 0, 30)
+
+--// Botão de fechar (neon)
+local CloseButton = Instance.new("TextButton", MainFrame)
+CloseButton.Size = UDim2.new(0, 35, 0, 35)
+CloseButton.Position = UDim2.new(1, -45, 0, 10)
+CloseButton.BackgroundColor3 = Color3.fromRGB(50, 0, 100)
+CloseButton.Text = "✕"
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextSize = 18
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local CloseCorner = Instance.new("UICorner", CloseButton)
+CloseCorner.CornerRadius = UDim.new(1, 0)
+
+CloseButton.MouseButton1Click:Connect(function()
+	MainFrame.Visible = false
+	OpenButton.Visible = true
+end)
+
+--// Tabs container
+local TabHolder = Instance.new("Frame", MainFrame)
+TabHolder.Position = UDim2.new(0, 10, 0, 50)
+TabHolder.Size = UDim2.new(1, -20, 0, 35)
+TabHolder.BackgroundTransparency = 1
+
+local UIListLayoutTabs = Instance.new("UIListLayout", TabHolder)
+UIListLayoutTabs.FillDirection = Enum.FillDirection.Horizontal
+UIListLayoutTabs.Padding = UDim.new(0, 10)
+UIListLayoutTabs.SortOrder = Enum.SortOrder.LayoutOrder
+
+--// Área de conteúdo
+local ContentFrame = Instance.new("Frame", MainFrame)
+ContentFrame.Position = UDim2.new(0, 10, 0, 95)
+ContentFrame.Size = UDim2.new(1, -20, 1, -115)
+ContentFrame.BackgroundTransparency = 1
+
+--// Função para criar abas e botões
+local ActiveTab = nil
+local function CreateTab(tabName, buttons)
+	local TabButton = Instance.new("TextButton", TabHolder)
+	TabButton.BackgroundColor3 = Color3.fromRGB(40, 0, 70)
+	TabButton.Text = tabName
+	TabButton.Font = Enum.Font.GothamBold
+	TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	TabButton.TextSize = 14
+	TabButton.Size = UDim2.new(0, 140, 0, 35)
+
+	local TabCorner = Instance.new("UICorner", TabButton)
+	TabCorner.CornerRadius = UDim.new(0, 8)
+
+	local TabContent = Instance.new("Frame", ContentFrame)
+	TabContent.Size = UDim2.new(1, 0, 1, 0)
+	TabContent.Visible = false
+	TabContent.BackgroundTransparency = 1
+
+	local UIListLayout = Instance.new("UIListLayout", TabContent)
+	UIListLayout.Padding = UDim.new(0, 10)
+
+	for _, info in ipairs(buttons) do
+		local Btn = Instance.new("TextButton", TabContent)
+		Btn.Size = UDim2.new(1, 0, 0, 40)
+		Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+		Btn.Text = info.name
+		Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Btn.Font = Enum.Font.Gotham
+		Btn.TextSize = 16
+
+		local BtnCorner = Instance.new("UICorner", Btn)
+		BtnCorner.CornerRadius = UDim.new(0, 8)
+
+		-- Efeito neon no hover
+		Btn.MouseEnter:Connect(function()
+			Btn.BackgroundColor3 = Color3.fromRGB(80, 0, 150)
+		end)
+		Btn.MouseLeave:Connect(function()
+			Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+		end)
+
+		-- Executar script
+		Btn.MouseButton1Click:Connect(function()
+			loadstring(game:HttpGet(info.link))()
+		end)
+	end
+
+	TabButton.MouseButton1Click:Connect(function()
+		if ActiveTab then
+			ActiveTab.Visible = false
+		end
+		TabContent.Visible = true
+		ActiveTab = TabContent
+	end)
+end
+
+--// Criar abas e scripts
+CreateTab("🌳 Grow a Garden", {
+	{name = "Speed Hub", link = "https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"},
+})
+
+CreateTab("🌆 99 Nights in the Forest", {
+	{name = "H4x", link = "https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua"},
+})
+
+-- Mostrar primeira aba automaticamente
+ContentFrame:FindFirstChildOfClass("Frame").Visible = true
+ActiveTab = ContentFrame:FindFirstChildOfClass("Frame")
+
+--// Abrir o Hub
+OpenButton.MouseButton1Click:Connect(function()
+	MainFrame.Visible = true
+	OpenButton.Visible = false
+end)
+
+-- Créditos
+local Credit = Instance.new("TextLabel", MainFrame)
+Credit.BackgroundTransparency = 1
+Credit.Position = UDim2.new(0, 15, 1, -25)
+Credit.Size = UDim2.new(1, -30, 0, 20)
+Credit.Font = Enum.Font.Gotham
+Credit.Text = "by CoiledTom"
+Credit.TextColor3 = Color3.fromRGB(180, 100, 255)
+Credit.TextSize = 13
+Credit.TextXAlignment = Enum.TextXAlignment.Left
