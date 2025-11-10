@@ -1,4 +1,4 @@
---// ⚡ CoiledTom Hub v3.1 | Futuristic Scrollable Tabs
+--// ⚡ CoiledTom Hub v3.2 | Futuristic Scrollable Tabs (Left Floating Button)
 --// 🌐 by CoiledTom
 
 local player = game.Players.LocalPlayer
@@ -16,7 +16,7 @@ OpenButton.TextColor3 = Color3.fromRGB(180, 100, 255)
 OpenButton.Font = Enum.Font.GothamBold
 OpenButton.TextSize = 24
 OpenButton.Size = UDim2.new(0, 50, 0, 50)
-OpenButton.Position = UDim2.new(1, -70, 0, 20)
+OpenButton.Position = UDim2.new(0, 20, 0, 20)
 OpenButton.Draggable = true
 
 local OpenCorner = Instance.new("UICorner", OpenButton)
@@ -86,7 +86,7 @@ ContentFrame.Position = UDim2.new(0, 10, 0, 100)
 ContentFrame.Size = UDim2.new(1, -20, 1, -115)
 ContentFrame.BackgroundTransparency = 1
 
---// Função de criação de abas e botões
+--// Função de criação de abas e botões com Scroll
 local ActiveTab = nil
 local function CreateTab(tabName, buttons)
 	local TabButton = Instance.new("TextButton", TabHolder)
@@ -100,17 +100,24 @@ local function CreateTab(tabName, buttons)
 	local TabCorner = Instance.new("UICorner", TabButton)
 	TabCorner.CornerRadius = UDim.new(0, 8)
 
-	local TabContent = Instance.new("Frame", ContentFrame)
-	TabContent.Size = UDim2.new(1, 0, 1, 0)
-	TabContent.Visible = false
-	TabContent.BackgroundTransparency = 1
+	--// Área de rolagem para os botões da aba
+	local ScrollFrame = Instance.new("ScrollingFrame", ContentFrame)
+	ScrollFrame.Size = UDim2.new(1, 0, 1, 0)
+	ScrollFrame.Visible = false
+	ScrollFrame.BackgroundTransparency = 1
+	ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+	ScrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	ScrollFrame.ScrollBarThickness = 6
+	ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(180, 100, 255)
+	ScrollFrame.ScrollBarImageTransparency = 0.3
 
-	local UIListLayout = Instance.new("UIListLayout", TabContent)
+	local UIListLayout = Instance.new("UIListLayout", ScrollFrame)
 	UIListLayout.Padding = UDim.new(0, 10)
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 	for _, info in ipairs(buttons) do
-		local Btn = Instance.new("TextButton", TabContent)
-		Btn.Size = UDim2.new(1, 0, 0, 40)
+		local Btn = Instance.new("TextButton", ScrollFrame)
+		Btn.Size = UDim2.new(1, -5, 0, 40)
 		Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 		Btn.Text = info.name
 		Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -132,18 +139,20 @@ local function CreateTab(tabName, buttons)
 		end)
 	end
 
+	-- Alternar entre abas
 	TabButton.MouseButton1Click:Connect(function()
 		if ActiveTab then
 			ActiveTab.Visible = false
 		end
-		TabContent.Visible = true
-		ActiveTab = TabContent
+		ScrollFrame.Visible = true
+		ActiveTab = ScrollFrame
 	end)
 end
 
---// Criação das abas e funções
+--// Abas e scripts ⚙️
 CreateTab("🌳 Grow a Garden", {
-	{name = "Speed Hub", link = "https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"},
+	{name = "Speed Hub X", link = "https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"},
+	{name = "NatHub", link = "https://rawscripts.net/raw/Universal-Script-NatHub-43407"},
 })
 
 CreateTab("🌆 99 Nights", {
@@ -155,9 +164,16 @@ CreateTab("🧠 Steal a Brainrot", {
 	{name = "feDhe", link = "https://raw.githubusercontent.com/bananaGanteng/Legend/refs/heads/main/Steal%20a%20Brainrot"},
 })
 
+CreateTab("🌐 Scripts Universal", {
+	{name = "Fling Touch", link = "https://pastebin.com/raw/Ucjd7Tbd"},
+	{name = "Bang", link = "https://pastebin.com/raw/4uMGmQXH"},
+	{name = "Fly Gui", link = "https://rawscripts.net/raw/Universal-Script-Fly-Gui-V3-Turkish-48460"},
+	{name = "Inf Yield", link = "https://rawscripts.net/raw/Universal-Script-inf-yeld-61578"},
+})
+
 --// Aba inicial
-ContentFrame:FindFirstChildOfClass("Frame").Visible = true
-ActiveTab = ContentFrame:FindFirstChildOfClass("Frame")
+ContentFrame:FindFirstChildOfClass("ScrollingFrame").Visible = true
+ActiveTab = ContentFrame:FindFirstChildOfClass("ScrollingFrame")
 
 --// Abrir o Hub
 OpenButton.MouseButton1Click:Connect(function()
