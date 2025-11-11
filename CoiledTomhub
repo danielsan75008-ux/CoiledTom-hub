@@ -1,5 +1,5 @@
---// ⚡ CoiledTom Hub v3.3 | Futuristic Scrollable Tabs (Left Floating Button + Scroll in Tabs)
---// 🌐 by CoiledTom
+--// ⚡ CoiledTom Hub v3.3 | Scroll + Nova Aba "Plants vs Brainrot"
+--// 🌐 by CoiledTom | Design Futurista com Rolagem Suave
 
 local player = game.Players.LocalPlayer
 local ScreenGui = Instance.new("ScreenGui")
@@ -7,7 +7,7 @@ ScreenGui.Name = "CoiledTomHub"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = player:WaitForChild("PlayerGui")
 
---// Botão flutuante 🚀 (canto superior esquerdo)
+--// Botão flutuante 🚀
 local OpenButton = Instance.new("TextButton")
 OpenButton.Parent = ScreenGui
 OpenButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
@@ -85,7 +85,7 @@ ContentFrame.Position = UDim2.new(0, 10, 0, 100)
 ContentFrame.Size = UDim2.new(1, -20, 1, -115)
 ContentFrame.BackgroundTransparency = 1
 
---// Função de criação de abas e botões (com scroll)
+--// Função para criar abas com rolagem vertical
 local ActiveTab = nil
 local function CreateTab(tabName, buttons)
 	local TabButton = Instance.new("TextButton", TabHolder)
@@ -99,21 +99,20 @@ local function CreateTab(tabName, buttons)
 	local TabCorner = Instance.new("UICorner", TabButton)
 	TabCorner.CornerRadius = UDim.new(0, 8)
 
-	local TabContent = Instance.new("ScrollingFrame", ContentFrame)
-	TabContent.Size = UDim2.new(1, 0, 1, 0)
-	TabContent.Visible = false
-	TabContent.BackgroundTransparency = 1
-	TabContent.ScrollBarThickness = 6
-	TabContent.AutomaticCanvasSize = Enum.AutomaticSize.Y
-	TabContent.CanvasSize = UDim2.new(0, 0, 0, 0)
-	TabContent.ScrollBarImageColor3 = Color3.fromRGB(180, 100, 255)
-	TabContent.ScrollBarImageTransparency = 0.3
+	local ScrollContent = Instance.new("ScrollingFrame", ContentFrame)
+	ScrollContent.Size = UDim2.new(1, 0, 1, 0)
+	ScrollContent.Visible = false
+	ScrollContent.BackgroundTransparency = 1
+	ScrollContent.ScrollBarThickness = 6
+	ScrollContent.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	ScrollContent.ScrollBarImageColor3 = Color3.fromRGB(180, 100, 255)
 
-	local UIListLayout = Instance.new("UIListLayout", TabContent)
+	local UIListLayout = Instance.new("UIListLayout", ScrollContent)
 	UIListLayout.Padding = UDim.new(0, 10)
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 	for _, info in ipairs(buttons) do
-		local Btn = Instance.new("TextButton", TabContent)
+		local Btn = Instance.new("TextButton", ScrollContent)
 		Btn.Size = UDim2.new(1, 0, 0, 40)
 		Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 		Btn.Text = info.name
@@ -140,8 +139,8 @@ local function CreateTab(tabName, buttons)
 		if ActiveTab then
 			ActiveTab.Visible = false
 		end
-		TabContent.Visible = true
-		ActiveTab = TabContent
+		ScrollContent.Visible = true
+		ActiveTab = ScrollContent
 	end)
 end
 
@@ -155,6 +154,10 @@ CreateTab("🌆 99 Nights", {
 	{name = "H4x", link = "https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua"},
 })
 
+CreateTab("🧟‍♂️ Plants vs Brainrot", {
+	{name = "Speed Hub X", link = "https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"},
+})
+
 CreateTab("🧠 Steal a Brainrot", {
 	{name = "Chilli Hub", link = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
 	{name = "feDhe", link = "https://raw.githubusercontent.com/bananaGanteng/Legend/refs/heads/main/Steal%20a%20Brainrot"},
@@ -165,7 +168,7 @@ CreateTab("🌐 Scripts Universal", {
 	{name = "Bang", link = "https://pastebin.com/raw/4uMGmQXH"},
 	{name = "Fly Gui", link = "https://rawscripts.net/raw/Universal-Script-Fly-Gui-V3-Turkish-48460"},
 	{name = "Inf Yield", link = "https://rawscripts.net/raw/Universal-Script-inf-yeld-61578"},
-	{name = "TP Tool", link = "https://rawscripts.net/raw/Universal-Script-TpTool-Teleport-Tool-47255"},
+	{name = "Tp Tool", link = "https://rawscripts.net/raw/Universal-Script-TpTool-Teleport-Tool-47255"},
 })
 
 --// Aba inicial
