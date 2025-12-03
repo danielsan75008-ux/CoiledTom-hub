@@ -1,4 +1,4 @@
---// ⚡ CoiledTom Hub v3.3 | Scroll + Nova Aba "Plants vs Brainrot"
+--// ⚡ CoiledTom Hub v3.5 | Corrigido (anti-crash, draggable, inicial safe)
 --// 🌐 by CoiledTom | Design Futurista com Rolagem Suave
 
 local player = game.Players.LocalPlayer
@@ -59,8 +59,8 @@ local CloseCorner = Instance.new("UICorner", CloseButton)
 CloseCorner.CornerRadius = UDim.new(1, 0)
 
 CloseButton.MouseButton1Click:Connect(function()
-MainFrame.Visible = false
-OpenButton.Visible = true
+    MainFrame.Visible = false
+    OpenButton.Visible = true
 end)
 
 --// Tabs com rolagem horizontal
@@ -85,70 +85,86 @@ ContentFrame.Position = UDim2.new(0, 10, 0, 100)
 ContentFrame.Size = UDim2.new(1, -20, 1, -115)
 ContentFrame.BackgroundTransparency = 1
 
---// Função para criar abas com rolagem vertical
-local ActiveTab = nil
-local function CreateTab(tabName, buttons)
-local TabButton = Instance.new("TextButton", TabHolder)
-TabButton.BackgroundColor3 = Color3.fromRGB(40, 0, 70)
-TabButton.Text = tabName
-TabButton.Font = Enum.Font.GothamBold
-TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-TabButton.TextSize = 14
-TabButton.Size = UDim2.new(0, 140, 0, 35)
+--// 💥 EXECUTOR DE SCRIPTS (corrigido)
+local function executeScript(link)
+    print("[CoiledTomHub] Executando:", link)
 
-local TabCorner = Instance.new("UICorner", TabButton)  
-TabCorner.CornerRadius = UDim.new(0, 8)  
+    local s, err = pcall(function()
+        loadstring(game:HttpGet(link))()
+    end)
 
-local ScrollContent = Instance.new("ScrollingFrame", ContentFrame)  
-ScrollContent.Size = UDim2.new(1, 0, 1, 0)  
-ScrollContent.Visible = false  
-ScrollContent.BackgroundTransparency = 1  
-ScrollContent.ScrollBarThickness = 6  
-ScrollContent.AutomaticCanvasSize = Enum.AutomaticSize.Y  
-ScrollContent.ScrollBarImageColor3 = Color3.fromRGB(180, 100, 255)  
-
-local UIListLayout = Instance.new("UIListLayout", ScrollContent)  
-UIListLayout.Padding = UDim.new(0, 10)  
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder  
-
-for _, info in ipairs(buttons) do  
-	local Btn = Instance.new("TextButton", ScrollContent)  
-	Btn.Size = UDim2.new(1, 0, 0, 40)  
-	Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)  
-	Btn.Text = info.name  
-	Btn.TextColor3 = Color3.fromRGB(255, 255, 255)  
-	Btn.Font = Enum.Font.Gotham  
-	Btn.TextSize = 16  
-
-	local BtnCorner = Instance.new("UICorner", Btn)  
-	BtnCorner.CornerRadius = UDim.new(0, 8)  
-
-	Btn.MouseEnter:Connect(function()  
-		Btn.BackgroundColor3 = Color3.fromRGB(80, 0, 150)  
-	end)  
-	Btn.MouseLeave:Connect(function()  
-		Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)  
-	end)  
-
-	Btn.MouseButton1Click:Connect(function()  
-		loadstring(game:HttpGet(info.link))()  
-	end)  
-end  
-
-TabButton.MouseButton1Click:Connect(function()  
-	if ActiveTab then  
-		ActiveTab.Visible = false  
-	end  
-	ScrollContent.Visible = true  
-	ActiveTab = ScrollContent  
-end)
-
+    if not s then
+        warn("⚠️ Erro ao carregar script:", err)
+    end
 end
 
---// Abas e scripts ⚙️
+--// Função para criar abas
+local ActiveTab = nil
+local CreatedTabs = {}
+
+local function CreateTab(tabName, buttons)
+    local TabButton = Instance.new("TextButton", TabHolder)
+    TabButton.BackgroundColor3 = Color3.fromRGB(40, 0, 70)
+    TabButton.Text = tabName
+    TabButton.Font = Enum.Font.GothamBold
+    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.TextSize = 14
+    TabButton.Size = UDim2.new(0, 140, 0, 35)
+
+    local TabCorner = Instance.new("UICorner", TabButton)
+    TabCorner.CornerRadius = UDim.new(0, 8)
+
+    local ScrollContent = Instance.new("ScrollingFrame", ContentFrame)
+    ScrollContent.Size = UDim2.new(1, 0, 1, 0)
+    ScrollContent.Visible = false
+    ScrollContent.BackgroundTransparency = 1
+    ScrollContent.ScrollBarThickness = 6
+    ScrollContent.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    ScrollContent.ScrollBarImageColor3 = Color3.fromRGB(180, 100, 255)
+
+    local UIListLayout = Instance.new("UIListLayout", ScrollContent)
+    UIListLayout.Padding = UDim.new(0, 10)
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+    for _, info in ipairs(buttons) do
+        local Btn = Instance.new("TextButton", ScrollContent)
+        Btn.Size = UDim2.new(1, 0, 0, 40)
+        Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        Btn.Text = info.name
+        Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        Btn.Font = Enum.Font.Gotham
+        Btn.TextSize = 16
+
+        local BtnCorner = Instance.new("UICorner", Btn)
+        BtnCorner.CornerRadius = UDim.new(0, 8)
+
+        Btn.MouseEnter:Connect(function()
+            Btn.BackgroundColor3 = Color3.fromRGB(80, 0, 150)
+        end)
+        Btn.MouseLeave:Connect(function()
+            Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        end)
+
+        Btn.MouseButton1Click:Connect(function()
+            executeScript(info.link)
+        end)
+    end
+
+    TabButton.MouseButton1Click:Connect(function()
+        if ActiveTab then
+            ActiveTab.Visible = false
+        end
+        ScrollContent.Visible = true
+        ActiveTab = ScrollContent
+    end)
+
+    table.insert(CreatedTabs, ScrollContent)
+end
+
+--// Abas e scripts
 CreateTab("🌳 Grow a Garden", {
-{name = "Speed Hub X", link = "https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"},
-{name = "NatHub", link = "https://rawscripts.net/raw/Universal-Script-NatHub-43407"},
+    {name = "Speed Hub X", link = "https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"},
+    {name = "NatHub", link = "https://rawscripts.net/raw/Universal-Script-NatHub-43407"},
 })
 
 CreateTab("🌆 99 Nights", {
@@ -157,30 +173,38 @@ CreateTab("🌆 99 Nights", {
 })
 
 CreateTab("🧟‍♂️ Plants vs Brainrot", {
-{name = "Speed Hub X", link = "https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"},
+    {name = "Speed Hub X", link = "https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"},
 })
 
 CreateTab("🧠 Steal a Brainrot", {
-{name = "Chilli Hub", link = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
-{name = "feDhe", link = "https://raw.githubusercontent.com/bananaGanteng/Legend/refs/heads/main/Steal%20a%20Brainrot"},
+    {name = "Chilli Hub", link = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
+    {name = "feDhe", link = "https://raw.githubusercontent.com/bananaGanteng/Legend/refs/heads/main/Steal%20a%20Brainrot"},
+})
+
+CreateTab("🍎 Blox Fruits", {
+    {name = "Gravity Hub", link = "https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Main.lua"},
+    {name = "Hydar Aimbot", link = "https://raw.githubusercontent.com/hydarscript/hydaraimbotmain/refs/heads/main/mainjunkiekey.lua"},
+    {name = "Aimbot V2", link = "https://raw.githubusercontent.com/ParadozCode/CentuDox-Hub-Paradoz-Hub/refs/heads/main/CentudoxLoader.xyz"},
 })
 
 CreateTab("🌐 Scripts Universal", {
-{name = "Fling Touch", link = "https://pastebin.com/raw/Ucjd7Tbd"},
-{name = "Bang", link = "https://pastebin.com/raw/4uMGmQXH"},
-{name = "Fly Gui", link = "https://rawscripts.net/raw/Universal-Script-Fly-Gui-V3-Turkish-48460"},
-{name = "Inf Yield", link = "https://rawscripts.net/raw/Universal-Script-inf-yeld-61578"},
-{name = "Tp Tool", link = "https://rawscripts.net/raw/Universal-Script-TpTool-Teleport-Tool-47255"},
+    {name = "Fling Touch", link = "https://pastebin.com/raw/Ucjd7Tbd"},
+    {name = "Bang", link = "https://pastebin.com/raw/4uMGmQXH"},
+    {name = "Fly Gui", link = "https://rawscripts.net/raw/Universal-Script-Fly-Gui-V3-Turkish-48460"},
+    {name = "Inf Yield", link = "https://rawscripts.net/raw/Universal-Script-inf-yeld-61578"},
+    {name = "Tp Tool", link = "https://rawscripts.net/raw/Universal-Script-TpTool-Teleport-Tool-47255"},
 })
 
 --// Aba inicial
-ContentFrame:FindFirstChildOfClass("ScrollingFrame").Visible = true
-ActiveTab = ContentFrame:FindFirstChildOfClass("ScrollingFrame")
+if #CreatedTabs > 0 then
+    CreatedTabs[1].Visible = true
+    ActiveTab = CreatedTabs[1]
+end
 
 --// Abrir o Hub
 OpenButton.MouseButton1Click:Connect(function()
-MainFrame.Visible = true
-OpenButton.Visible = false
+    MainFrame.Visible = true
+    OpenButton.Visible = false
 end)
 
 --// Créditos
